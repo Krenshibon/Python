@@ -15,3 +15,11 @@ python todo.py clear                # Remove all tasks
 The `add` command accepts optional `--priority` and `--due YYYY-MM-DD` arguments to
 specify a priority level and due date for the task. Tasks are stored in
 `tasks.json` in the same directory.
+
+## Running Tests
+
+Install `pytest` and run the test suite with:
+
+```
+pytest
+```
