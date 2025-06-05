@@ -22,4 +22,5 @@ You can also manage your tasks using a small Tkinter GUI:
 python todo_gui.py
 ```
 
-The GUI provides buttons to add, mark as done, delete and clear tasks.
+The GUI provides a scrollable list of tasks along with buttons to add,
+mark as done, delete and clear items.
