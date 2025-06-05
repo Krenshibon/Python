@@ -18,10 +18,15 @@ def save_tasks(tasks: List[Dict]):
     with open(TASKS_FILE, "w") as f:
         json.dump(tasks, f, indent=2)
 
-def add_task(description: str):
+def add_task(description: str, priority: str = None, due: str = None):
     tasks = load_tasks()
     task_id = max([t["id"] for t in tasks], default=0) + 1
-    tasks.append({"id": task_id, "description": description, "done": False})
+    task = {"id": task_id, "description": description, "done": False}
+    if priority:
+        task["priority"] = priority
+    if due:
+        task["due"] = due
+    tasks.append(task)
     save_tasks(tasks)
     print(f"Added task {task_id}: {description}")
 
@@ -30,9 +35,26 @@ def list_tasks():
     if not tasks:
         print("No tasks found.")
         return
+
+    show_priority = any("priority" in t for t in tasks)
+    show_due = any("due" in t for t in tasks)
+
+    header_parts = ["ID", "Status"]
+    if show_priority:
+        header_parts.append("Priority")
+    if show_due:
+        header_parts.append("Due")
+    header_parts.append("Description")
+    print(" ".join(header_parts))
+
     for t in tasks:
-        status = "[x]" if t.get("done") else "[ ]"
-        print(f"{t['id']} {status} {t['description']}")
+        parts = [str(t["id"]), "[x]" if t.get("done") else "[ ]"]
+        if show_priority:
+            parts.append(str(t.get("priority", "-")))
+        if show_due:
+            parts.append(str(t.get("due", "-")))
+        parts.append(t["description"])
+        print(" ".join(parts))
 
 def mark_done(task_id: int):
     tasks = load_tasks()
@@ -66,6 +88,14 @@ def main():
 
     add_p = subparsers.add_parser("add", help="Add a new task")
     add_p.add_argument("description", help="Task description")
+    add_p.add_argument(
+        "--priority",
+        help="Task priority",
+    )
+    add_p.add_argument(
+        "--due",
+        help="Due date in YYYY-MM-DD format",
+    )
 
     list_p = subparsers.add_parser("list", help="List tasks")
 
@@ -80,7 +110,7 @@ def main():
     args = parser.parse_args()
 
     if args.command == "add":
-        add_task(args.description)
+        add_task(args.description, priority=args.priority, due=args.due)
     elif args.command == "list":
         list_tasks()
     elif args.command == "done":
