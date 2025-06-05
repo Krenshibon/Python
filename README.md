@@ -13,3 +13,13 @@ python todo.py clear                # Remove all tasks
 ```
 
 Tasks are stored in `tasks.json` in the same directory.
+
+## Graphical Interface
+
+You can also manage your tasks using a small Tkinter GUI:
+
+```
+python todo_gui.py
+```
+
+The GUI provides buttons to add, mark as done, delete and clear tasks.
